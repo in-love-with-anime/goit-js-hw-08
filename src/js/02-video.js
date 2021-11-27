@@ -1,5 +1,5 @@
 const iFrameEl = document.querySelector('#vimeo-player');
-const throttle = require('lodash.throttle');
+import throttle from 'lodash.throttle';
 
 // Инициализация плеера
 const player = new Vimeo.Player(iFrameEl);
@@ -15,7 +15,3 @@ player.on('timeupdate', throttle(onTimeUpdate, 1000));
 
 // Возобновление воспроизведения с сохраненной позиции
 player.setCurrentTime(localStorage.getItem('videoplayer-current-time')).then().catch();
-
-
-// 2 вариант
-// window.onload = player.setCurrentTime(localStorage.getItem('videoplayer-current-time'));
