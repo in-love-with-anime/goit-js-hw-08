@@ -14,4 +14,19 @@ const onTimeUpdate = date => {
 player.on('timeupdate', throttle(onTimeUpdate, 1000));
 
 // Возобновление воспроизведения с сохраненной позиции
-player.setCurrentTime(localStorage.getItem('videoplayer-current-time')).then().catch();
+player.setCurrentTime(localStorage.getItem('videoplayer-current-time'))
+    .then(function (seconds) { })
+    .catch(function (error) {
+    switch (error.name) {
+        case 'RangeError':
+            break;
+        default:
+            break;
+    }
+});
+
+
+// if (localStorage.getItem("videoplayer-current-time") !== null) {
+//     player.setCurrentTime(localStorage.getItem("videoplayer-current-time"));
+// };
+
