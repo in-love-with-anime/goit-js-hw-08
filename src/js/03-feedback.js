@@ -1,60 +1,44 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import throttle from 'lodash.throttle';
 
-const feedbackForm = document.querySelector('.feedback-form');
-const formInputMail = document.querySelector('.feedback-form input');
-const formInputText = document.querySelector('.feedback-form textarea')
+const feedbackForm = document.querySelector(".feedback-form");
+const FORM_KEY = "feedback-form-state";
+let formData = {};
 
-
-const FORM_KEY = 'feedback-form-state';
-const formData = {};
-
-
-const onFormSubmit = evt => {
-    evt.preventDefault();
-    evt.target.reset();
-    console.log(FORM_KEY, JSON.parse(localStorage.getItem(FORM_KEY)));
-    localStorage.removeItem(FORM_KEY);
-}
-
+// Вешаем слушателя на форму и обновляем хранилище не чаще чем раз в 500 миллисекунд
 const onFormInput = evt => {
     formData[evt.target.name] = evt.target.value;
     localStorage.setItem(FORM_KEY, JSON.stringify(formData));
-}
+};
 
-const savingValue = () => {
-        const savedMessage = JSON.parse(localStorage.getItem(FORM_KEY));
-    
-        if (savedMessage && savedMessage.message) {
-            formInputText.value = savedMessage.message;
-        };
-        
-        if (savedMessage && savedMessage.email) {
-            formInputMail.value = savedMessage.email;
-        };
+feedbackForm.addEventListener("input", throttle(onFormInput, 500));
+
+
+// Получение данных из локального хранилище
+const initForm = () => {
+    let persistedFilters = localStorage.getItem(FORM_KEY);
+    if (persistedFilters) {
+        persistedFilters = JSON.parse(persistedFilters);
+        Object.entries(persistedFilters).forEach(([name, value]) => {
+            feedbackForm.elements[name].value = value;
+        });
+    }
+};
+
+initForm();
+
+// Сабмит формы и очистка локального хранилища
+const savingValue = evt => {
+    evt.preventDefault();
+
+    const inputEmail = feedbackForm.elements.email.value;
+    const inputMessage = feedbackForm.elements.message.value;
+    if (inputEmail && inputMessage !== "") {
+        let userForm = localStorage.getItem(FORM_KEY);
+        userForm = JSON.parse(localStorage.getItem(FORM_KEY));
+        console.log(userForm);
+        localStorage.removeItem(FORM_KEY);
+        evt.currentTarget.reset();
     };
-
-savingValue();
-    
-feedbackForm.addEventListener('submit', onFormSubmit);
-feedbackForm.addEventListener('input', throttle(onFormInput, 500));
-
-
+};
+  
+feedbackForm.addEventListener("submit", savingValue);
