@@ -2,12 +2,13 @@ import throttle from 'lodash.throttle';
 
 const feedbackForm = document.querySelector(".feedback-form");
 const FORM_KEY = "feedback-form-state";
-let formData = {};
 
 // Вешаем слушателя на форму и обновляем хранилище не чаще чем раз в 500 миллисекунд
-const onFormInput = evt => {
-    formData[evt.target.name] = evt.target.value;
-    localStorage.setItem(FORM_KEY, JSON.stringify(formData));
+const onFormInput = () => {
+    const formData = new FormData(feedbackForm);
+    let userForm = {};
+    formData.forEach((value, name) => (userForm[name] = value.trim()));
+    localStorage.setItem(FORM_KEY, JSON.stringify(userForm));
 };
 
 feedbackForm.addEventListener("input", throttle(onFormInput, 500));
@@ -34,8 +35,8 @@ const savingValue = evt => {
     const inputMessage = feedbackForm.elements.message.value;
     if (inputEmail && inputMessage !== "") {
         let userForm = localStorage.getItem(FORM_KEY);
-        userForm = JSON.parse(localStorage.getItem(FORM_KEY));
-        console.log(userForm);
+        userForm = JSON.parse(userForm);
+        console.log('Отправляем форму с данными: ', userForm);
         localStorage.removeItem(FORM_KEY);
         evt.currentTarget.reset();
     };
