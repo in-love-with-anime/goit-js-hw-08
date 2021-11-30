@@ -7,39 +7,35 @@ const FORM_KEY = "feedback-form-state";
 const onFormInput = () => {
     const formData = new FormData(feedbackForm);
     let userForm = {};
-    formData.forEach((value, name) => (userForm[name] = value.trim()));
+    formData.forEach((value, name) => userForm[name] = value.trim());
     localStorage.setItem(FORM_KEY, JSON.stringify(userForm));
 };
 
 feedbackForm.addEventListener("input", throttle(onFormInput, 500));
 
 
-// Получение данных из локального хранилище
-const initForm = () => {
-    let persistedFilters = localStorage.getItem(FORM_KEY);
-    if (persistedFilters) {
-        persistedFilters = JSON.parse(persistedFilters);
-        Object.entries(persistedFilters).forEach(([name, value]) => {
-            feedbackForm.elements[name].value = value;
-        });
+// Получение данных из локального хранилище при перезагрузке страницы
+const populateForm = () => {
+    if (localStorage.getItem(FORM_KEY)) {
+        Object.entries(JSON.parse(localStorage.getItem(FORM_KEY))).forEach(([name, value]) => feedbackForm.elements[name].value = value); // `${name}: ${value}`; `${name}: value`; `${name} = value`
     }
 };
 
-initForm();
+populateForm();
 
-// Сабмит формы и очистка локального хранилища
-const savingValue = evt => {
-    evt.preventDefault();
-
-    const inputEmail = feedbackForm.elements.email.value;
-    const inputMessage = feedbackForm.elements.message.value;
-    if (inputEmail && inputMessage !== "") {
-        let userForm = localStorage.getItem(FORM_KEY);
-        userForm = JSON.parse(userForm);
-        console.log('Отправляем форму с данными: ', userForm);
+/*
+Сабмит формы:
+- Останавливаем поведение по умолчанию
+- Очищаем интерфейс(форму от значений)
+- Убираем отправленные данные из локального хранилища
+*/
+const onFormSubmit = event => {
+    event.preventDefault();
+    if (feedbackForm.elements.email.value && feedbackForm.elements.message.value !== "") {
+        console.log('Отправляем форму с данными: ', JSON.parse(localStorage.getItem(FORM_KEY)));
+        event.currentTarget.reset();
         localStorage.removeItem(FORM_KEY);
-        evt.currentTarget.reset();
     };
 };
   
-feedbackForm.addEventListener("submit", savingValue);
+feedbackForm.addEventListener("submit", onFormSubmit);
