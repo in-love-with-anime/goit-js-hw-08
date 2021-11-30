@@ -3,7 +3,8 @@ import throttle from 'lodash.throttle';
 const feedbackForm = document.querySelector(".feedback-form");
 const FORM_KEY = "feedback-form-state";
 
-// Вешаем слушателя на форму и обновляем хранилище не чаще чем раз в 500 миллисекунд
+// Получение значений полей и сохранение их в хранилище
+// Добавление слушателя на форму и обновление хранилища не чаще, чем раз в 500 миллисекунд
 const onFormInput = () => {
     const formData = new FormData(feedbackForm);
     let userForm = {};
@@ -15,13 +16,13 @@ feedbackForm.addEventListener("input", throttle(onFormInput, 500));
 
 
 // Получение данных из локального хранилище при перезагрузке страницы
-const populateForm = () => {
+const onPopulateForm = () => {
     if (localStorage.getItem(FORM_KEY)) {
         Object.entries(JSON.parse(localStorage.getItem(FORM_KEY))).forEach(([name, value]) => feedbackForm.elements[name].value = value); // `${name}: ${value}`; `${name}: value`; `${name} = value`
     }
 };
 
-populateForm();
+onPopulateForm();
 
 /*
 Сабмит формы:
