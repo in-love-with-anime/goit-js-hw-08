@@ -4,4 +4,4 @@ var t=arguments[3],n="Expected a function",e=NaN,i="[object Symbol]",r=/^\s+|\s+
 },{}],"TTyb":[function(require,module,exports) {
 "use strict";var e=t(require("lodash.throttle"));function t(e){return e&&e.__esModule?e:{default:e}}const a=document.querySelector(".feedback-form"),r="feedback-form-state",o=()=>{const e=new FormData(a);let t={};e.forEach((e,a)=>t[a]=e.trim()),localStorage.setItem(r,JSON.stringify(t))};a.addEventListener("input",(0,e.default)(o,500));const l=()=>{localStorage.getItem(r)&&Object.entries(JSON.parse(localStorage.getItem(r))).forEach(([e,t])=>a.elements[e].value=t)};localStorage.getItem(r)&&Object.entries(JSON.parse(localStorage.getItem(r))).forEach(([e,t])=>a.elements[e].value=t);const s=e=>{e.preventDefault(),a.elements.email.value&&""!==a.elements.message.value&&(console.log("Отправляем форму с данными: ",JSON.parse(localStorage.getItem(r))),e.currentTarget.reset(),localStorage.removeItem(r))};a.addEventListener("submit",s);
 },{"lodash.throttle":"FNyO"}]},{},["TTyb"], null)
-//# sourceMappingURL=/goit-js-hw-08/03-feedback.908d76fe.js.map
+//# sourceMappingURL=/goit-js-hw-08/03-feedback.3d9116e5.js.map
